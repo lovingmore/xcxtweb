@@ -1,53 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>用户登录</title>
 <link rel="stylesheet" type="text/css" href="/lib/h-ui/css/H-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/css/H-ui.admin.css" />
-<link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/Hui-iconfont/1.0.7/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/lib/icheck/icheck.css" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/skin/default/skin.css" id="skin" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/css/style.css" />
 </head>
 <body style="background: url('/images/background.jpg');">
-<div style="margin:0 auto;width:300px;padding-top:150px">
-	<h2>用户登录</h2>
-	<br>
-	<div class="row cl">
-		<label class="form-label col-xs-3 col-sm-2" style="padding-right: 0;line-height: 30px;">帐号:</label>
-		<div class="formControls col-xs-9 col-sm-10" style="padding-left: 0">
-			<input type="text" id="username" class="input-text" placeholder="帐号">
+	<div style="margin: 0 auto; width: 300px; padding-top: 150px">
+		<h2>用户登录</h2>
+		<br>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2"
+				style="padding-right: 0; line-height: 30px;">帐号:</label>
+			<div class="formControls col-xs-9 col-sm-10" style="padding-left: 0">
+				<input type="text" id="username" class="input-text" placeholder="帐号">
+			</div>
 		</div>
-	</div>
-	<br>
-	<div class="row cl">
-		<label class="form-label col-xs-3 col-sm-2" style="padding-right: 0;line-height: 30px;">密码:</label>
-		<div class="formControls col-xs-9 col-sm-10" style="padding-left: 0">
-			<input type="password" id="password" class="input-text" placeholder="密码">
+		<br>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2"
+				style="padding-right: 0; line-height: 30px;">密码:</label>
+			<div class="formControls col-xs-9 col-sm-10" style="padding-left: 0">
+				<input type="password" id="password" class="input-text"
+					placeholder="密码">
+			</div>
 		</div>
+		<br>
+		<div class="checkbox">
+			<label> <input type="checkbox" id="save">记住帐号
+			</label>
+		</div>
+		<br>
+		<div class="btn btn-lg btn-primary btn-block" onclick="Login.login()">登陆</div>
 	</div>
-	<br>
-	<div class="checkbox">
-		<label>
-			<input type="checkbox" id="save" >记住帐号
-		</label>
-	</div>
-	<br>
-	<div class="btn btn-lg btn-primary btn-block" onclick="Login.login()">登陆</div>
-</div>
-<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="/lib/layer/2.1/layer.js"></script>
-<script type="text/javascript" src="/lib/h-ui/js/H-ui.js"></script>
-<script type="text/javascript" src="/lib/h-ui.admin/js/H-ui.admin.js"></script>
-<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
-<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
-<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
-<script type="text/javascript" src="/lib/Validform/5.3.2/Validform.min.js"></script>
-<script type="text/javascript" src="/js/common/cookie.js"></script>
-<script type="text/javascript">
+	<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/lib/layer/2.1/layer.js"></script>
+	<script type="text/javascript" src="/lib/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="/lib/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript"
+		src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+	<script type="text/javascript"
+		src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript"
+		src="/lib/Validform/5.3.2/Validform.min.js"></script>
+	<script type="text/javascript" src="/js/common/cookie.js"></script>
+	<script type="text/javascript">
 	$(document).ready(function(){
 		//监听回车按钮
 		document.onkeydown=keyDownSearch;

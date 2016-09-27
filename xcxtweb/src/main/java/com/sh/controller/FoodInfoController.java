@@ -22,6 +22,7 @@ import com.sh.entity.FoodCategory;
 import com.sh.entity.FoodInfo;
 import com.sh.service.FoodCategoryService;
 import com.sh.service.FoodInfoService;
+import com.sh.util.DateUtil;
 import com.sh.util.FileUtil;
 import com.sh.util.Global;
 import com.sh.util.PageUtil;
@@ -92,9 +93,12 @@ public class FoodInfoController {
 	
 	@RequestMapping("/save.do")
 	@ResponseBody
-	public ResultData save(FoodInfo foodInfo, HttpServletRequest request){
+	public ResultData save(FoodInfo foodInfo, HttpServletRequest request, String redemptionDateStr){
 		ResultData rd = new ResultData();
 		if(foodInfo!=null){
+			if(!StringUtils.isEmpty(redemptionDateStr)){
+				foodInfo.setRedemptionDate(DateUtil.strToDate(redemptionDateStr));
+			}
 			if(foodInfo.getId()!=null && foodInfo.getId()!=0){
 				FoodInfo foodInfo_o = foodInfoService.get(foodInfo.getId());
 				foodInfo_o.setName(foodInfo_o.getName());
@@ -106,6 +110,7 @@ public class FoodInfoController {
 				foodInfo_o.setCategoryId(foodInfo.getCategoryId());
 				foodInfo_o.setFacePic(foodInfo.getFacePic());
 				foodInfo_o.setContent(foodInfo.getContent());
+				foodInfo_o.setRedemptionDate(foodInfo.getRedemptionDate());
 				foodInfoService.update(foodInfo_o);
 			}else{
 				foodInfoService.save(foodInfo);

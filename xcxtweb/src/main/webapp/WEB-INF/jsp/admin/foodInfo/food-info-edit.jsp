@@ -4,10 +4,12 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+<meta http-equiv="Content-Type"
+	content="multipart/form-data; charset=utf-8" />
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5.js"></script>
@@ -15,42 +17,54 @@
 <script type="text/javascript" src="lib/PIE_IE678.js"></script>
 <![endif]-->
 <link rel="stylesheet" type="text/css" href="/lib/h-ui/css/H-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/css/H-ui.admin.css" />
-<link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/Hui-iconfont/1.0.7/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/lib/icheck/icheck.css" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/skin/default/skin.css" id="skin" />
-<link rel="stylesheet" type="text/css" href="/lib/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css"
+	href="/lib/h-ui.admin/css/style.css" />
 <style type="text/css">
 .modal-backdrop {
 	background-color: transparent;
 }
+
 .modal.fade.in {
 	margin-top: -120px !important;
 	top: 180px;
 	width: 450px;
 }
-table.option td:first-child{
+
+table.option td:first-child {
 	width: 25%;
 }
-table.option select{
+
+table.option select {
 	width: 100%;
 }
-.fr{
+
+.fr {
 	float: right;
 	margin-right: 10px;
 }
-.fl{
+
+.fl {
 	float: left;
 	margin-left: 10px;
 }
-.dis{
+
+.dis {
 	display: none;
 }
-.disabled{
+
+.disabled {
 	color: #8a8a8a;
 	border-color: #8a8a8a;
 }
-#dataTable a{
+
+#dataTable a {
 	color: blue;
 }
 </style>
@@ -61,102 +75,136 @@ table.option select{
 <title>菜品信息</title>
 </head>
 <body>
-<div class="page-container" >
-	<form action="/admin/foodInfo/save.do" class="form form-horizontal" method="post" id="form" >
-	<input type="hidden" id="id" name="id" value="${foodInfo.id }" />
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">菜品名称：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input datatype="*" maxlength="30" id="name" name="name" value="${foodInfo.name }" placeholder="请输入菜品名称" class="input-text" type="text" />
-		</div>
+	<div class="page-container">
+		<form action="/admin/foodInfo/save.do" class="form form-horizontal"
+			method="post" id="form">
+			<input type="hidden" id="id" name="id" value="${foodInfo.id }" />
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">菜品名称：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input datatype="*" maxlength="30" id="name" name="name"
+						value="${foodInfo.name }" placeholder="请输入菜品名称" class="input-text"
+						type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">规格：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input datatype="*" maxlength="30" id="norms" name="norms"
+						value="${foodInfo.norms }" placeholder="请输入规格" class="input-text"
+						type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">销售价格：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input maxlength="30" id="price" name="price"
+						value="${foodInfo.price }" placeholder="请输入销售价格"
+						class="input-text" type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">换购价格：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input maxlength="30" id="redemptionPrice" name="redemptionPrice"
+						value="${foodInfo.redemptionPrice }" placeholder="请输入换购价格"
+						class="input-text" type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">换购时间：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input onClick="WdatePicker()" id="redemptionDateStr"
+						name="redemptionDateStr"
+						value="<fmt:formatDate value='${foodInfo.redemptionDate }' pattern='yyyy-MM-dd' />"
+						placeholder="请输入换购时间" class="input-text" type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">单位：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input datatype="*" maxlength="10" id="unit" name="unit"
+						value="${foodInfo.unit }" placeholder="请输入单位" class="input-text"
+						type="text" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">菜品分类：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<select datatype="*" id="categoryId" name="categoryId"
+						class="input-text">
+						<option value="0">请选择</option>
+						<c:forEach items="${categorys }" var="foodCategory">
+							<option value="${foodCategory.id }"
+								<c:if test="${foodCategory.id==foodInfo.categoryId }" >selected</c:if>>${foodCategory.name }</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">上下架：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<select datatype="*" id="status" name="status" class="input-text">
+						<option value="0">上架</option>
+						<option value="1"
+							<c:if test="${foodInfo.status==1 }">selected</c:if>>下架</option>
+					</select>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">封面图片：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input type="hidden" id="facePic" name="facePic"
+						value="${foodInfo.facePic }" /> <i
+						class="Hui-iconfont Hui-iconfont-tuku"
+						style="font-size: 20px; margin-left: 15px; color: #76c325"></i> <a
+						style="font-size: 14px; color: blue"
+						href="javascript:selectFiles()">上传图片</a>
+					<div id="pictureDiv">
+						<c:if test="${!empty foodInfo.facePic }">
+							<img width="300px" height="300px"
+								src="${cachePath }${foodInfo.facePic}">
+							<a href="javascript:deleteFile('${foodInfo.facePic }')">删除图片</a>
+						</c:if>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">内容：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<!-- 加载编辑器的容器 -->
+					<script id="container" name="content" type="text/html"
+						style="width: 100%">${foodInfo.content}</script>
+				</div>
+			</div>
+			<input type="file" style="display: none" accept="image/*"
+				class="input-file" id="picture_file" name="picture_file"
+				onchange="uploadPicture()" />
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-8  col-xs-offset-2 col-sm-offset-2">
+					<input class="btn btn-primary radius" type="submit" value="提交" />
+				</div>
+			</div>
+		</form>
 	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">规格：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input datatype="*" maxlength="30" id="norms" name="norms" value="${foodInfo.norms }" placeholder="请输入规格" class="input-text" type="text" />
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">销售价格：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input datatype="*" maxlength="30" id="price" name="price" value="${foodInfo.price }" placeholder="请输入销售价格" class="input-text" type="text" />
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">换购价格：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input datatype="*" maxlength="30" id="redemptionPrice" name="redemptionPrice" value="${foodInfo.redemptionPrice }" placeholder="请输入换购价格" class="input-text" type="text" />
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">单位：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input datatype="*" maxlength="10" id="unit" name="unit" value="${foodInfo.unit }" placeholder="请输入单位" class="input-text" type="text" />
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">菜品分类：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<select datatype="*" id="categoryId" name="categoryId" class="input-text">
-			<option value="0">请选择</option>
-			<c:forEach items="${categorys }" var="foodCategory">
-				<option value="${foodCategory.id }" <c:if test="${foodCategory.id==foodInfo.categoryId }" >selected</c:if>>${foodCategory.name }</option>
-			</c:forEach>
-		</select>
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">上下架：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<select datatype="*" id="status" name="status" class="input-text">
-			<option value="0">上架</option>
-			<option value="1" <c:if test="${foodInfo.status==1 }">selected</c:if>>下架</option>
-		</select>
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">封面图片：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<input type="hidden" id="facePic" name="facePic" value="${foodInfo.facePic }" />
-		<i class="Hui-iconfont Hui-iconfont-tuku" style="font-size:20px;margin-left: 15px;color: #76c325"></i>
-		<a style="font-size:14px;color:blue" href="javascript:selectFiles()">上传图片</a>
-		<div id="pictureDiv" >
-			<c:if test="${!empty foodInfo.facePic }">
-			<img width="300px" height="300px" src="${cachePath }${foodInfo.facePic}">
-			<a href="javascript:deleteFile('${foodInfo.facePic }')">删除图片</a>
-			</c:if>
-		</div>
-		</div>
-	</div>
-	<div class="row cl">
-		<label class="form-label col-xs-2 col-sm-2">内容：</label>
-		<div class="formControls col-xs-8 col-sm-8">
-		<!-- 加载编辑器的容器 -->
-	    <script id="container" name="content" type="text/html" style="width:100%">${foodInfo.content}</script>
-		</div>
-	</div>
-	<input type="file" style="display:none" accept="image/*" class="input-file" id="picture_file" name="picture_file" onchange="uploadPicture()" />
-	<div class="row cl">
-		<div class="col-xs-8 col-sm-8  col-xs-offset-2 col-sm-offset-2">
-		<input class="btn btn-primary radius" type="submit" value="提交" />
-		</div>
-	</div>
-	</form>
-</div>
-<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="/lib/layer/2.1/layer.js"></script>
-<script type="text/javascript" src="/lib/h-ui/js/H-ui.js"></script>
-<script type="text/javascript" src="/lib/h-ui.admin/js/H-ui.admin.js"></script>
-<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
-<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
-<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
-<script type="text/javascript" src="/lib/Validform/5.3.2/Validform.min.js"></script>
-<script type="text/javascript" src="/lib/ajaxfileupload.js"></script>
-<!-- 配置文件 -->
-<script type="text/javascript" src="/lib/ueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 -->
-<script type="text/javascript" src="/lib/ueditor/ueditor.all.js"></script>
-<script type="text/javascript">
+	<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/lib/layer/2.1/layer.js"></script>
+	<script type="text/javascript" src="/lib/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="/lib/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript"
+		src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+	<script type="text/javascript"
+		src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript"
+		src="/lib/Validform/5.3.2/Validform.min.js"></script>
+	<script type="text/javascript" src="/lib/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="/lib/My97DatePicker/WdatePicker.js"></script>
+	<!-- 配置文件 -->
+	<script type="text/javascript" src="/lib/ueditor/ueditor.config.js"></script>
+	<!-- 编辑器源码文件 -->
+	<script type="text/javascript" src="/lib/ueditor/ueditor.all.js"></script>
+	<script type="text/javascript">
 $(document).ready(function() {
 	$("#form").Validform({
 		tiptype:3,
