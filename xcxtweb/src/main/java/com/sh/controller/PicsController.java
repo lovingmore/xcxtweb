@@ -1,6 +1,8 @@
 package com.sh.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sh.entity.FoodCategory;
 import com.sh.entity.FoodInfo;
-import com.sh.service.FoodCategoryService;
-import com.sh.service.FoodInfoService;
-import com.sh.util.DateUtil;
+import com.sh.entity.Pics;
+import com.sh.service.PicsService;
 import com.sh.util.FileUtil;
 import com.sh.util.Global;
 import com.sh.util.PageUtil;
@@ -30,23 +30,19 @@ import com.sh.util.Pager;
 import com.sh.util.ResultData;
 
 @Controller
-@RequestMapping(value="/admin/foodInfo")
-public class FoodInfoController {
-	private Logger log = Logger.getLogger(FoodInfoController.class);
-	
-	private String cacheImagePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
+@RequestMapping(value="/admin/pics")
+public class PicsController {
+	private Logger log = Logger.getLogger(PicsController.class);
 	
 	@Resource
-	private FoodInfoService foodInfoService;
-	@Resource
-	private FoodCategoryService foodCategoryService;
+	private PicsService picsService;
 	
 	@RequestMapping("/list.do")
 	public ModelAndView list(Integer pageId, String searchKey){
-		ModelAndView model = new ModelAndView("/admin/foodInfo/food-info-list");
+		ModelAndView model = new ModelAndView("/admin/pics/pics-list");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchKey", searchKey);
-		int count = foodInfoService.count(map);
+		int count = picsService.count(map);
 		model.addObject("count", count);
 		model.addObject("page", new Pager(count));
 		model.addObject("searchKey", searchKey);
@@ -56,35 +52,39 @@ public class FoodInfoController {
 	@RequestMapping("/listAjax.do")
 	@ResponseBody
 	public ResultData listAjax(Integer pageId, String searchKey){
+		ResultData rd = new ResultData();
 		int start = PageUtil.getStart(pageId, Pager.PAGE_SIZE);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchKey", searchKey);
-		List<FoodInfo> list = foodInfoService.list(map, start, Pager.PAGE_SIZE);
-		ResultData rd = new ResultData();
-		rd.setStatus(1);
+		List<Pics> list = picsService.list(map, start, Pager.PAGE_SIZE);
+		try {
+			if(list!=null && list.size()>0){
+				for(Pics pics : list){
+					if(!StringUtils.isEmpty(pics.getUrl())){
+						resetCacheFile(pics.getUrl());
+						pics.setUrl(Global.getFileCacheDirImages()+"/"+pics.getUrl());
+					}
+				}
+			}
+			rd.setStatus(1);
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			rd.setMessage(e.getMessage());
+		}
 		rd.setResult(list);
 		return rd;
 	}
 	
 	@RequestMapping("/toEdit.do")
 	public ModelAndView toEdit(Integer id){
-		ModelAndView model = new ModelAndView("/admin/foodInfo/food-info-edit");
+		ModelAndView model = new ModelAndView("/admin/pics/pics-edit");
 		try {
 			if(id!=null && id!=0){
-				FoodInfo foodInfo = foodInfoService.get(id);
-				if(!StringUtils.isEmpty(foodInfo.getFacePic())){
-					String sourceFile = Global.getFileSaveDirImages()+File.separator+foodInfo.getFacePic();
-					String targetFile = cacheImagePath+File.separator+foodInfo.getFacePic();
-					FileUtil.createDir(cacheImagePath);
-					FileUtil.resetCacheFile(sourceFile, targetFile);
-				}
-				model.addObject("foodInfo", foodInfo);
+				Pics pics = picsService.get(id);
+				resetCacheFile(pics.getUrl());
+				model.addObject("pics", pics);
 			}
 			model.addObject("cachePath", Global.getFileCacheDirImages()+"/");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("status", 0);
-			List<FoodCategory> list_fc = foodCategoryService.list(map);
-			model.addObject("categorys", list_fc);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 		}
@@ -93,47 +93,33 @@ public class FoodInfoController {
 	
 	@RequestMapping("/save.do")
 	@ResponseBody
-	public ResultData save(FoodInfo foodInfo, HttpServletRequest request, String redemptionDateStr){
+	public ResultData save(Pics pics){
 		ResultData rd = new ResultData();
-		if(foodInfo!=null){
-			if(!StringUtils.isEmpty(redemptionDateStr)){
-				foodInfo.setRedemptionDate(DateUtil.strToDate(redemptionDateStr));
-			}
-			if(foodInfo.getId()!=null && foodInfo.getId()!=0){
-				FoodInfo foodInfo_o = foodInfoService.get(foodInfo.getId());
-				foodInfo_o.setName(foodInfo_o.getName());
-				foodInfo_o.setNorms(foodInfo.getNorms());
-				foodInfo_o.setPrice(foodInfo.getPrice());
-				foodInfo_o.setRedemptionPrice(foodInfo.getRedemptionPrice());
-				foodInfo_o.setUnit(foodInfo.getUnit());
-				foodInfo_o.setStatus(foodInfo.getStatus());
-				foodInfo_o.setCategoryId(foodInfo.getCategoryId());
-				foodInfo_o.setFacePic(foodInfo.getFacePic());
-				foodInfo_o.setContent(foodInfo.getContent());
-				foodInfo_o.setRedemptionDate(foodInfo.getRedemptionDate());
-				foodInfoService.update(foodInfo_o);
+		if(pics!=null){
+			if(pics.getId()!=null && pics.getId()!=0){
+				Pics pics_o = picsService.get(pics.getId());
+				pics_o.setTitle(pics.getTitle());
+				pics_o.setType(pics.getType());
+				pics_o.setUrl(pics.getUrl());
+				picsService.update(pics_o);
 			}else{
-				foodInfoService.save(foodInfo);
+				pics.setCreateTime(new Date());
+				picsService.save(pics);
 			}
 			rd.setStatus(1);
 		}
 		return rd;
 	}
 	
-	@RequestMapping("/changeStatus.do")
+	@RequestMapping("/delete.do")
 	@ResponseBody
-	public ResultData changeStatus(Integer id){
+	public ResultData delete(Integer id){
 		ResultData rd = new ResultData();
-		try {
-			if(id!=null){
-				FoodInfo foodInfo = foodInfoService.get(id);
-				foodInfo.setStatus(foodInfo.getStatus()==0?1:0);
-				foodInfoService.update(foodInfo);
-				rd.setStatus(1);
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			rd.setMessage(e.getMessage());
+		if(id!=null){
+			picsService.delete(id);
+			rd.setStatus(1);
+		}else{
+			rd.setMessage("缺少图片id参数");
 		}
 		return rd;
 	}
@@ -208,6 +194,16 @@ public class FoodInfoController {
 			rd.setMessage(e.getMessage());
 		}
 		return rd;
+	}
+	
+	private void resetCacheFile(String fileName) throws IOException{
+		if(!StringUtils.isEmpty(fileName)){
+			String sourceFile = Global.getFileSaveDirImages()+File.separator+fileName;
+			String cacheImagePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
+			String targetFile = cacheImagePath+File.separator+fileName;
+			FileUtil.createDir(cacheImagePath);
+			FileUtil.resetCacheFile(sourceFile, targetFile);
+		}
 	}
 	
 }
