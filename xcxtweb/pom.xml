@@ -165,6 +165,28 @@
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
+		<!-- excel -->
+         <dependency>  
+            <groupId>org.apache.poi</groupId>  
+            <artifactId>poi</artifactId>  
+            <version>3.12</version>  
+        </dependency>
+        <dependency>  
+            <groupId>org.apache.poi</groupId>  
+            <artifactId>poi-ooxml</artifactId>  
+            <version>3.12</version>  
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.xmlbeans</groupId>
+        	<artifactId>xmlbeans</artifactId>
+        	<version>2.6.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.poi</groupId>
+        	<artifactId>poi-ooxml-schemas</artifactId>
+        	<version>3.12</version>
+        </dependency>
+        <!-- excel -->
 
 	</dependencies>
 

@@ -72,47 +72,22 @@ table.option select {
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>用户信息</title>
+<title>菜品分类</title>
 </head>
 <body>
 	<div class="page-container">
-		<form action="/admin/menu/save.do" class="form form-horizontal"
-			method="post" id="form">
-			<input type="hidden" id="createType" name="createType" value="" /> <input
-				type="hidden" id="id" name="id" value="${menu.id }" />
+		<form action="/admin/foodCategory/save.do"
+			class="form form-horizontal" method="post" id="form">
+			<input type="hidden" id="parentId" name="parentId"
+				value="${parentId }" /> <input type="hidden" id="id" name="id"
+				value="${foodCategory.id }" /> <input type="hidden" id="isChild"
+				name="isChild" value="${isChild }" />
 			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">菜单名称：</label>
+				<label class="form-label col-xs-2 col-sm-2">菜品分类：</label>
 				<div class="formControls col-xs-8 col-sm-8">
 					<input datatype="*" maxlength="30" id="name" name="name"
-						value="${menu.name }" placeholder="请输入菜单名称" class="input-text"
-						type="text" />
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">父菜单：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<select id="parentId" name="parentId" class="input-text">
-						<option value="0">无</option>
-						<c:forEach items="${menus }" var="mu">
-							<option value="${mu.id }"
-								<c:if test="${menu.parentId==mu.id }">selected</c:if>>${mu.name }</option>
-						</c:forEach>
-					</select>
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">序号：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<input maxlength="30" id="listno" name="listno"
-						value="${menu.listno}" placeholder="请输入排序序号" class="input-text"
-						type="text" />
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">链接地址：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<input maxlength="150" id="url" name="url" value="${menu.url}"
-						placeholder="请输入链接地址" class="input-text" type="text" />
+						value="${foodCategory.name }" placeholder="请输入菜品分类"
+						class="input-text" type="text" />
 				</div>
 			</div>
 			<div class="row cl">
@@ -150,21 +125,30 @@ $(document).ready(function() {
 
 function save(){
 	$.ajax({
-		"url" : "/admin/menu/save.do",
+		"url" : "/admin/foodCategory/save.do",
 		"data" : $("form").serialize(),
 		"type" : "POST",
 		"dataType" : "json",
 		"async" : false,
 		"success" : function(data) {
+			var isChild = $("#isChild").val();
 			if(data && data.status==1){
 				parent.layer.msg("保存成功");
-				parent.location.reload();
+				if(isChild==true){
+					parent.parent.Data.editChild($("#parentId").val());
+				}else{
+					parent.location.reload();
+				}
 			}else{
-				parent.layer.msg("保存失败");
+				if(isChild==true){
+					parent.parent.layer.msg("保存失败");
+				}else{
+					parent.layer.msg("保存失败");
+				}
 			}
 		},
 		"error" : function() {
-			alert("网络异常，请检测网络后重新操作!");
+			parent.layer.alert("网络异常，请检测网络后重新操作!");
 		}
 	});
 }

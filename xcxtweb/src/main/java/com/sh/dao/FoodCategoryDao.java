@@ -57,7 +57,7 @@ public class FoodCategoryDao extends BaseDao{
 		String hql = "delete FoodCategory where id=?";
 		this.executeHql(session, hql, id);
 	}
-
+	
 	private String getHql(Map<String, Object> map){
 		StringBuffer sb = new StringBuffer();
 		if(map!=null){

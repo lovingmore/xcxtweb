@@ -20,6 +20,7 @@ import com.sh.util.PageUtil;
 import com.sh.util.Pager;
 import com.sh.util.ResultData;
 import com.sh.vo.FoodCategoryVo;
+import com.sh.vo.TreeNode;
 
 @Controller
 @RequestMapping(value="/admin/foodCategory")
@@ -128,6 +129,35 @@ public class FoodCategoryController {
 				foodCategoryService.update(foodCategory);
 				rd.setStatus(1);
 			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			rd.setMessage(e.getMessage());
+		}
+		return rd;
+	}
+	
+	@RequestMapping("/getFoodCategoryTree.do")
+	@ResponseBody
+	public ResultData getFoodCategoryTree(Integer id){
+		ResultData rd = new ResultData();
+		try {
+			List<TreeNode> list_tree = new ArrayList<TreeNode>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", 0);
+			List<FoodCategory> list_cat = foodCategoryService.list(map);
+			if(list_cat!=null && list_cat.size()>0){
+				TreeNode tn = null;
+				for(FoodCategory fc : list_cat){
+					tn = new TreeNode();
+					tn.setId(fc.getId());
+					tn.setpId(fc.getParentId()==null?0:fc.getParentId());
+					tn.setName(fc.getName());
+					tn.setOpen(true);
+					list_tree.add(tn);
+				}
+			}
+			rd.setStatus(1);
+			rd.setResult(list_tree);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			rd.setMessage(e.getMessage());

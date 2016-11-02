@@ -6,55 +6,55 @@ import java.util.Map;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.sh.entity.FoodInfo;
+import com.sh.entity.Coupon;
 
-@Repository("foodInfoDao")
-public class FoodInfoDao extends BaseDao{
+@Repository("couponDao")
+public class CouponDao extends BaseDao{
 	
-	public FoodInfo get(Session session, Integer id) {
-		String hql = "from FoodInfo where id=?";
-		List<FoodInfo> list = this.findByHql(session, hql, id);
+	public Coupon get(Session session, Integer id) {
+		String hql = "from Coupon where id=?";
+		List<Coupon> list = this.findByHql(session, hql, id);
 		if(list!=null){
 			return list.get(0);
 		}
 		return null;
 	}
 
-	public List<FoodInfo> findAll(Session session) {
-		String hql = "from FoodInfo";
+	public List<Coupon> findAll(Session session) {
+		String hql = "from Coupon";
 		return this.findByHql(session, hql);
 	}
 	
-	public List<FoodInfo> list(Session session, Map<String, Object> map) {
-		String hql = "from FoodInfo ";
+	public List<Coupon> list(Session session, Map<String, Object> map) {
+		String hql = "from Coupon ";
 		hql += getHql(map);
-		hql += " order by id desc";
+		hql += " order by createTime desc";
 		return this.findByHql(session, hql);
 	}
 	
-	public List<FoodInfo> list(Session session, Map<String, Object> map, int startPage, int pageSize) {
-		String hql = "from FoodInfo ";
+	public List<Coupon> list(Session session, Map<String, Object> map, int startPage, int pageSize) {
+		String hql = "from Coupon ";
 		hql += getHql(map);
-		hql += " order by id desc";
+		hql += " order by createTime desc";
 		return this.findByHqlPage(session, hql, startPage, pageSize);
 	}
 	
 	public int count(Session session, Map<String, Object> map) {
-		String hql = "select count(*) from FoodInfo ";
+		String hql = "select count(*) from Coupon ";
 		hql += getHql(map);
 		return this.getTotalRowsByHql(session, hql);
 	}
 
-	public void save(Session session, FoodInfo entity) {
+	public void save(Session session, Coupon entity) {
 		super.save(session, entity);
 	}
 
-	public void update(Session session, FoodInfo entity) {
+	public void update(Session session, Coupon entity) {
 		super.update(session, entity);
 	}
 
 	public void delete(Session session, Integer id) {
-		String hql = "delete FoodInfo where id=?";
+		String hql = "delete Coupon where id=?";
 		this.executeHql(session, hql, id);
 	}
 
@@ -64,9 +64,6 @@ public class FoodInfoDao extends BaseDao{
 			sb.append(" where 1=1");
 			if(map.get("searchKey")!=null){
 				sb.append(" and name like '%").append(map.get("searchKey")).append("%'");
-			}
-			if(map.get("categoryId")!=null){
-				sb.append(" and categoryId=").append(map.get("categoryId"));
 			}
 		}
 		return sb.toString();

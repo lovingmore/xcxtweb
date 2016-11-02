@@ -72,51 +72,47 @@ table.option select {
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>用户信息</title>
+<title>优惠券信息</title>
 </head>
 <body>
 	<div class="page-container">
-		<form action="/admin/menu/save.do" class="form form-horizontal"
+		<form action="/admin/coupon/save.do" class="form form-horizontal"
 			method="post" id="form">
-			<input type="hidden" id="createType" name="createType" value="" /> <input
-				type="hidden" id="id" name="id" value="${menu.id }" />
+			<input type="hidden" id="id" name="id" value="${coupon.id }" />
 			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">菜单名称：</label>
-				<div class="formControls col-xs-8 col-sm-8">
+				<label class="form-label col-xs-3 col-sm-3">优惠券名称：</label>
+				<div class="formControls col-xs-7 col-sm-7">
 					<input datatype="*" maxlength="30" id="name" name="name"
-						value="${menu.name }" placeholder="请输入菜单名称" class="input-text"
+						value="${coupon.name }" placeholder="请输入优惠券名称" class="input-text"
 						type="text" />
 				</div>
 			</div>
 			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">父菜单：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<select id="parentId" name="parentId" class="input-text">
-						<option value="0">无</option>
-						<c:forEach items="${menus }" var="mu">
-							<option value="${mu.id }"
-								<c:if test="${menu.parentId==mu.id }">selected</c:if>>${mu.name }</option>
-						</c:forEach>
-					</select>
+				<label class="form-label col-xs-3 col-sm-3">金额：</label>
+				<div class="formControls col-xs-7 col-sm-7">
+					<input datatype="*" maxlength="30" id="money" name="money" value="${coupon.money }" placeholder="请输入金额" class="input-text" type="number" />
 				</div>
 			</div>
 			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">序号：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<input maxlength="30" id="listno" name="listno"
-						value="${menu.listno}" placeholder="请输入排序序号" class="input-text"
-						type="text" />
+				<label class="form-label col-xs-3 col-sm-3">有效开始日期：</label>
+				<div class="formControls col-xs-7 col-sm-7">
+					<input datatype="*" onClick="WdatePicker()" readonly="readonly" id="startDateStr" name="startDateStr" value="<fmt:formatDate value='${coupon.startDate }' pattern='yyyy-MM-dd' />" placeholder="请输入有效开始日期" class="input-text" type="text" />
 				</div>
 			</div>
 			<div class="row cl">
-				<label class="form-label col-xs-2 col-sm-2">链接地址：</label>
-				<div class="formControls col-xs-8 col-sm-8">
-					<input maxlength="150" id="url" name="url" value="${menu.url}"
-						placeholder="请输入链接地址" class="input-text" type="text" />
+				<label class="form-label col-xs-3 col-sm-3">有效结束日期：</label>
+				<div class="formControls col-xs-7 col-sm-7">
+					<input datatype="*" onClick="WdatePicker()" readonly="readonly" id="endDateStr" name="endDateStr" value="<fmt:formatDate value='${coupon.endDate }' pattern='yyyy-MM-dd' />" placeholder="请输入有效结束日期" class="input-text" type="text" />
 				</div>
 			</div>
 			<div class="row cl">
-				<div class="col-xs-8 col-sm-8  col-xs-offset-2 col-sm-offset-2">
+				<label class="form-label col-xs-3 col-sm-3">数量：</label>
+				<div class="formControls col-xs-7 col-sm-7">
+					<input datatype="*" maxlength="10" id="number" name="number" value="${coupon.number }" placeholder="请输入数量" class="input-text" type="number" />
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-xs-7 col-sm-7  col-xs-offset-3 col-sm-offset-3">
 					<input class="btn btn-primary radius" type="submit" value="提交" />
 				</div>
 			</div>
@@ -126,13 +122,11 @@ table.option select {
 	<script type="text/javascript" src="/lib/layer/2.1/layer.js"></script>
 	<script type="text/javascript" src="/lib/h-ui/js/H-ui.js"></script>
 	<script type="text/javascript" src="/lib/h-ui.admin/js/H-ui.admin.js"></script>
-	<script type="text/javascript"
-		src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
-	<script type="text/javascript"
-		src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+	<script type="text/javascript" src="/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
 	<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
-	<script type="text/javascript"
-		src="/lib/Validform/5.3.2/Validform.min.js"></script>
+	<script type="text/javascript" src="/lib/Validform/5.3.2/Validform.min.js"></script>
+	<script type="text/javascript" src="/lib/My97DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript">
 $(document).ready(function() {
 	$("#form").Validform({
@@ -150,7 +144,7 @@ $(document).ready(function() {
 
 function save(){
 	$.ajax({
-		"url" : "/admin/menu/save.do",
+		"url" : "/admin/coupon/save.do",
 		"data" : $("form").serialize(),
 		"type" : "POST",
 		"dataType" : "json",
