@@ -117,7 +117,7 @@ table.option select {
 						onclick="submit()"><i
 						class="Hui-iconfont Hui-iconfont-search2"></i> 查询</span>
 					<span class="btn btn-primary radius" style="margin: 0 10px;"
-						onclick="exportExcel()"><i class="Hui-iconfont Hui-iconfont-search2"></i> 导出</span>
+						onclick="exportExcel()"><i class="Hui-iconfont Hui-iconfont-daochu"></i> 导出</span>
 					<%-- <span class="tab_query <c:if test="${empty status || status == -1}">tqselected</c:if>" value="-1" >全部</span>
 		<span class="tab_query <c:if test="${status == 1}">tqselected</c:if>" value="1">同意</span>
 		<span class="tab_query <c:if test="${status == 2}">tqselected</c:if>" value="2">拒绝</span>
@@ -472,7 +472,7 @@ table.option select {
 	}
 
 	function exportExcel(){
-		location.href="/admin/purchase/exportExcel.do?purchaseType="+$("#purchaseType").val();
+		location.href="/admin/saleStatistics/exportExcel.do";
 	}
 
 </script>
