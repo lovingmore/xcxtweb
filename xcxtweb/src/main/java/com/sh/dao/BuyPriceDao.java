@@ -14,7 +14,7 @@ public class BuyPriceDao extends BaseDao{
 	public BuyPrice get(Session session, Integer id) {
 		String hql = "from BuyPrice where id=?";
 		List<BuyPrice> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;

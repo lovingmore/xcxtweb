@@ -1,5 +1,6 @@
 package com.sh.service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +10,26 @@ import javax.annotation.Resource;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sh.dao.CouponDao;
+import com.sh.dao.CustomerDao;
+import com.sh.dao.FoodInfoDao;
 import com.sh.dao.OrderDao;
 import com.sh.dao.OrderDetailDao;
+import com.sh.dao.ShopCartDao;
+import com.sh.entity.Coupon;
+import com.sh.entity.Customer;
+import com.sh.entity.FoodInfo;
 import com.sh.entity.Order;
+import com.sh.entity.OrderDetail;
+import com.sh.entity.ShopCart;
+import com.sh.util.CodeUtil;
+import com.sh.vo.OrderDetailVo;
 import com.sh.vo.PurchaseOrderVo;
+import com.sh.vo.phone.OrderPhoneVo;
 
 
 
@@ -26,6 +41,14 @@ public class OrderService{
 	private OrderDao orderDao;
 	@Resource
 	private OrderDetailDao orderDetailDao;
+	@Autowired
+	private CustomerDao customerDao;
+	@Autowired
+	private FoodInfoDao foodInfoDao;
+	@Autowired
+	private ShopCartDao shopCartDao;
+	@Autowired
+	private CouponDao couponDao;
 	
 	private Session getCurrentSession() {
 		return this.sessionFactory.getCurrentSession();
@@ -162,6 +185,123 @@ public class OrderService{
 				vo.setPurchaser(objs[7]==null?null:(String)objs[7]);
 				vo.setNorms(objs[8]==null?null:(String)objs[8]);
 				vo.setFoodPurchasePrice(objs[9]==null?null:(Double)objs[9]);
+				list_vo.add(vo);
+			}
+		}
+		return list_vo;
+	}
+	
+	/**
+	 * 保存用户订单
+	 * @param userId
+	 * @param foodInfoIds
+	 * @param foodCounts
+	 * @param customerId
+	 */
+	public void saveOrderForPhone(Integer userId, Integer[] foodInfoIds, 
+			Integer[] foodCounts, Integer customerId, Integer couponId){
+		Order order = new Order();
+		Customer customer = customerDao.get(getCurrentSession(), customerId);
+		if(customer!=null){
+			order.setMobile(customer.getUserAccount());
+			order.setOrderDate(new Date());
+			order.setOrderNo(CodeUtil.getOrderId());
+			order.setOrderStatus(0);
+			order.setPurchaser(customer.getShopName());
+			order.setRecAddress(customer.getShopAddr());
+			order.setUserId(userId);
+			if(couponId!=null && couponId!=0){
+				Coupon coupon = this.couponDao.get(getCurrentSession(), couponId);
+				if(coupon!=null){
+					order.setCouponId(coupon.getId());
+					order.setCouponMoney(coupon.getMoney());
+				}
+			}
+			this.orderDao.save(getCurrentSession(), order);
+			OrderDetail orderDetail = null;
+			for(int i=0;i<foodInfoIds.length;i++){
+				orderDetail = new OrderDetail();
+				FoodInfo foodInfo = foodInfoDao.get(getCurrentSession(), foodInfoIds[i]);
+				if(foodInfo!=null){
+					orderDetail.setFoodInfoId(foodInfo.getId());
+					orderDetail.setFoodNum(Double.valueOf(foodCounts[i]));
+					orderDetail.setFoodPrice(foodInfo.getPrice());
+					orderDetail.setOrderNo(order.getOrderNo());
+					orderDetail.setOrderId(order.getId());
+					this.orderDetailDao.save(getCurrentSession(), orderDetail);
+					//删除购物车
+					ShopCart shopCart = this.shopCartDao.getByUserIdFoodId(getCurrentSession(), userId, orderDetail.getFoodInfoId());
+					if(shopCart!=null){
+						this.shopCartDao.delete(getCurrentSession(), shopCart.getId());
+					}
+				}
+			}
+		}
+		
+	}
+	
+	public OrderPhoneVo getByOrderNo(Integer orderId){
+		OrderPhoneVo vo = new OrderPhoneVo();
+		Order order = this.orderDao.get(getCurrentSession(), orderId);
+		if(order!=null){
+			BeanUtils.copyProperties(order, vo);
+//			0 待支付 1 待发货  2 待收货  3 已结束
+			String orderStatusStr = "";
+			switch (order.getOrderStatus()) {
+			case 0:
+				orderStatusStr = "待支付";
+				break;
+			case 1:
+				orderStatusStr = "待发货";		
+				break;
+			case 2:
+				orderStatusStr = "待收货";
+				break;
+			case 3:
+				orderStatusStr = "已完成";
+				break;
+			default:
+				break;
+			}
+			vo.setOrderStatusStr(orderStatusStr);
+			List<OrderDetail> details = this.orderDetailDao.listByOrderId(getCurrentSession(), orderId);
+			List<OrderDetailVo> vos = new ArrayList<>();
+			if(details!=null && details.size()>0){
+				DecimalFormat decimal = new DecimalFormat("#.00");
+				Double totalOrderAmount = 0d;
+				Double totalFoodAmount = 0d;
+				OrderDetailVo detailVo = null;
+				for(OrderDetail detail : details){
+					detailVo = new OrderDetailVo();
+					BeanUtils.copyProperties(detail, detailVo);
+					FoodInfo foodInfo = this.foodInfoDao.get(getCurrentSession(), detail.getFoodInfoId());
+					if(foodInfo!=null){
+						detailVo.setFoodFacePic(foodInfo.getFacePic());
+						detailVo.setFoodInfoName(foodInfo.getName());
+					}
+					vos.add(detailVo);
+					totalFoodAmount += detail.getFoodPrice()*detail.getFoodNum();
+					double discount = 0;
+					if(detail.getDiscountAmount()!=null){
+						discount = detail.getDiscountAmount();
+					}
+					totalOrderAmount +=totalFoodAmount-discount;
+				}
+				vo.setVos(vos);
+				vo.setTotalFoodAmount(Double.valueOf(decimal.format(totalFoodAmount)));
+				vo.setTotalOrderAmount(Double.valueOf(decimal.format(totalOrderAmount-vo.getCouponMoney())));
+			}
+		}
+		return vo;
+	}
+	
+	public List<OrderPhoneVo> listVoByUserIdStatus(Integer userId, Integer status) {
+		List<OrderPhoneVo> list_vo = new ArrayList<>();
+		List<Order> list_order = this.orderDao.listVoByUserIdStatus(getCurrentSession(), userId, status);
+		if(list_order!=null && list_order.size()>0){
+			OrderPhoneVo vo = null;
+			for(Order order : list_order){
+				vo = getByOrderNo(order.getId());
 				list_vo.add(vo);
 			}
 		}

@@ -26,6 +26,10 @@ public class CustomerService{
 	public Customer get(Integer id) {
 		return this.customerDao.get(getCurrentSession(), id);
 	}
+	
+	public Customer getByUserAccount(String userAccount) {
+		return this.customerDao.getByUserAccount(getCurrentSession(), userAccount);
+	}
 
 	public List<Customer> findAll() {
 		return this.customerDao.findAll(getCurrentSession());

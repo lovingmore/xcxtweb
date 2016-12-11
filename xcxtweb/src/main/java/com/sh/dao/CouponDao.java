@@ -14,7 +14,7 @@ public class CouponDao extends BaseDao{
 	public Coupon get(Session session, Integer id) {
 		String hql = "from Coupon where id=?";
 		List<Coupon> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;
@@ -64,6 +64,9 @@ public class CouponDao extends BaseDao{
 			sb.append(" where 1=1");
 			if(map.get("searchKey")!=null){
 				sb.append(" and name like '%").append(map.get("searchKey")).append("%'");
+			}
+			if(map.get("dr")!=null){
+				sb.append(" and dr=").append(map.get("dr"));
 			}
 		}
 		return sb.toString();

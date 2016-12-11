@@ -14,7 +14,16 @@ public class CustomerDao extends BaseDao{
 	public Customer get(Session session, Integer id) {
 		String hql = "from Customer where id=?";
 		List<Customer> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}
+		return null;
+	}
+	
+	public Customer getByUserAccount(Session session, String userAccount) {
+		String hql = "from Customer where userAccount=?";
+		List<Customer> list = this.findByHql(session, hql, userAccount);
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;

@@ -14,7 +14,7 @@ public class PicsDao extends BaseDao{
 	public Pics get(Session session, Integer id) {
 		String hql = "from Pics where id=?";
 		List<Pics> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;
@@ -64,6 +64,9 @@ public class PicsDao extends BaseDao{
 			sb.append(" where 1=1");
 			if(map.get("searchKey")!=null){
 				sb.append(" and title like '%").append(map.get("searchKey")).append("%'");
+			}
+			if(map.get("type")!=null){
+				sb.append(" and type=").append(map.get("type"));
 			}
 		}
 		return sb.toString();

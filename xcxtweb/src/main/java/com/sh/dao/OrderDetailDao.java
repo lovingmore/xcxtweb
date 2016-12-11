@@ -17,7 +17,7 @@ public class OrderDetailDao extends BaseDao{
 	public OrderDetail get(Session session, Integer id) {
 		String hql = "from OrderDetail where id=?";
 		List<OrderDetail> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;

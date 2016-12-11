@@ -25,13 +25,13 @@ public class User implements java.io.Serializable {
 	private String openId;
 	private String password;
 	private Integer roleId;
-	private Byte userType;
+	private Integer userType;
 	private String username;
 
 	public User() {
 	}
 
-	public User(Date createTime, Integer dr, String name, String openId, String password, Integer roleId, Byte userType,
+	public User(Date createTime, Integer dr, String name, String openId, String password, Integer roleId, Integer userType,
 			String username) {
 		this.createTime = createTime;
 		this.dr = dr;
@@ -111,11 +111,11 @@ public class User implements java.io.Serializable {
 	}
 
 	@Column(name = "user_type")
-	public Byte getUserType() {
+	public Integer getUserType() {
 		return this.userType;
 	}
 
-	public void setUserType(Byte userType) {
+	public void setUserType(Integer userType) {
 		this.userType = userType;
 	}
 

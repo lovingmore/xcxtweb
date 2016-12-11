@@ -14,7 +14,7 @@ public class MenuDao extends BaseDao{
 	public Menu get(Session session, Integer id) {
 		String hql = "from Menu where id=?";
 		List<Menu> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;

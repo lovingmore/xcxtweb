@@ -15,6 +15,7 @@ public class OrderDetailVo {
     private Double TotalFoodAmount;  //商品总价
     private Double TotalOrderAmount;  //订单总价
     private Date orderDate;//订单时间
+    private String foodFacePic;//菜品封面
 	
 	
 	public Integer getId() {
@@ -82,6 +83,12 @@ public class OrderDetailVo {
 	}
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+	public String getFoodFacePic() {
+		return foodFacePic;
+	}
+	public void setFoodFacePic(String foodFacePic) {
+		this.foodFacePic = foodFacePic;
 	}
 	
 	

@@ -68,9 +68,9 @@ public class UserDao extends BaseDao{
 		this.executeHql(session, hql, id);
 	}
 	
-	public User checkLogin(Session session, String username, String password){
-		String hql = "from User where username=? and password=?";
-		List<User> list = this.findByHql(session, hql, username, password);
+	public User checkLogin(Session session, String username, String password, Integer userType){
+		String hql = "from User where username=? and password=? and userType=?";
+		List<User> list = this.findByHql(session, hql, username, password, userType);
 		if(list!=null && list.size()>0){
 			return list.get(0);
 		}

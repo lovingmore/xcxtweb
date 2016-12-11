@@ -91,7 +91,8 @@ table.option select {
 				<label class="form-label col-xs-2 col-sm-2">图片类型：</label>
 				<div class="formControls col-xs-8 col-sm-8">
 					<select id="type" name="type" class="input-text">
-						<option value="0">首页</option>
+						<option value="0">首页滚动广告</option>
+						<option value="1">首页底部广告</option>
 					</select>
 				</div>
 			</div>
@@ -107,15 +108,23 @@ table.option select {
 					<div id="pictureDiv">
 						<c:if test="${!empty pics.url }">
 							<img width="300px" height="300px"
-								src="${cachePath }${pics.url}">
+								src="${pics.url}">
 							<a href="javascript:deleteFile('${pics.url }')">删除图片</a>
 						</c:if>
 					</div>
 				</div>
 			</div>
-			<input type="file" style="display: none" accept="image/*"
+			<input type="file" style="display: none" 
 				class="input-file" id="picture_file" name="picture_file"
 				onchange="uploadPicture()" />
+			<div class="row cl">
+				<label class="form-label col-xs-2 col-sm-2">图片链接地址：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input maxlength="200" id="redirectUrl" name="redirectUrl"
+						value="${pics.redirectUrl }" placeholder="请输入标题" class="input-text"
+						type="text" />
+				</div>
+			</div>
 			<div class="row cl">
 				<div class="col-xs-8 col-sm-8  col-xs-offset-2 col-sm-offset-2">
 					<input class="btn btn-primary radius" type="submit" value="提交" />
@@ -172,7 +181,7 @@ function save(){
 }
 
 function selectFiles(id){
-	$("#picture_file").click();
+	$("#picture_file").trigger('click');
 }
 function uploadPicture(){
 	var tip = layer.load();
@@ -190,7 +199,7 @@ function uploadPicture(){
 				parent.layer.alert('上传成功');
 				var div = $("#pictureDiv");
 				var fileName = data.result;
-				var html = '<img width="300px" height="300px" src="${cachePath}'+fileName+'">' +
+				var html = '<img width="300px" height="300px" src="'+fileName+'">' +
 						'<a href="javascript:deleteFile(\''+fileName+'\')">删除图片</a>';
 				div.html(html);
 				$("#url").val(fileName);

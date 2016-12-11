@@ -112,6 +112,12 @@ table.option select {
 				</div>
 			</div>
 			<div class="row cl">
+				<label class="form-label col-xs-3 col-sm-3">满足使用金额：</label>
+				<div class="formControls col-xs-7 col-sm-7">
+					<input datatype="*" maxlength="10" id="conditionMoney" name="conditionMoney" value="${coupon.conditionMoney }" placeholder="请输入满足使用条件的金额" class="input-text" type="number" />
+				</div>
+			</div>
+			<div class="row cl">
 				<div class="col-xs-7 col-sm-7  col-xs-offset-3 col-sm-offset-3">
 					<input class="btn btn-primary radius" type="submit" value="提交" />
 				</div>

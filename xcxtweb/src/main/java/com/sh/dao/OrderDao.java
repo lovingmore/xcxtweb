@@ -1,6 +1,5 @@
 package com.sh.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.sh.entity.Order;
-import com.sh.vo.PurchaseOrderVo;
 
 
 
@@ -19,10 +17,19 @@ public class OrderDao extends BaseDao{
 	public Order get(Session session, Integer id) {
 		String hql = "from Order where id=?";
 		List<Order> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;
+	}
+	
+	public List<Order> listVoByUserIdStatus(Session session, Integer userId, Integer status) {
+		String statusHql ="";
+		if(status!=null){
+			statusHql = " and OrderStatus="+status;
+		}
+		String hql = "from Order where userId=? "+statusHql+" order by OrderDate desc";
+		return this.findByHql(session, hql, userId);
 	}
 
 	public List<Order> findAll(Session session) {

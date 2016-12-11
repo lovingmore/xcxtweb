@@ -61,7 +61,11 @@ public class UserService{
 	}
 	
 	public User checkLogin(String username, String password) {
-		return this.userDao.checkLogin(getCurrentSession(), username, PasswordUtil.encryt(password));
+		return this.userDao.checkLogin(getCurrentSession(), username, PasswordUtil.encryt(password), 0);
 	}
 
+	public User checkLoginForPhone(String username, String password) {
+		return this.userDao.checkLogin(getCurrentSession(), username, PasswordUtil.encryt(password), 1);
+	}
+	
 }

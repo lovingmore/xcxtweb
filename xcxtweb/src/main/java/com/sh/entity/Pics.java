@@ -28,6 +28,7 @@ public class Pics implements java.io.Serializable {
 	private Integer type;
 	private String url;
 	private Date createTime;
+	private String redirectUrl;
 
 	public Pics() {
 	}
@@ -69,7 +70,7 @@ public class Pics implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "url", length = 50)
+	@Column(name = "url", length = 200)
 	public String getUrl() {
 		return this.url;
 	}
@@ -86,6 +87,15 @@ public class Pics implements java.io.Serializable {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "redirect_url", length = 200)
+	public String getRedirectUrl() {
+		return redirectUrl;
+	}
+
+	public void setRedirectUrl(String redirectUrl) {
+		this.redirectUrl = redirectUrl;
 	}
 
 }

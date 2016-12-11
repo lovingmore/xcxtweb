@@ -58,14 +58,6 @@ public class PicsController {
 		map.put("searchKey", searchKey);
 		List<Pics> list = picsService.list(map, start, Pager.PAGE_SIZE);
 		try {
-			if(list!=null && list.size()>0){
-				for(Pics pics : list){
-					if(!StringUtils.isEmpty(pics.getUrl())){
-						resetCacheFile(pics.getUrl());
-						pics.setUrl(Global.getFileCacheDirImages()+"/"+pics.getUrl());
-					}
-				}
-			}
 			rd.setStatus(1);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
@@ -81,10 +73,8 @@ public class PicsController {
 		try {
 			if(id!=null && id!=0){
 				Pics pics = picsService.get(id);
-				resetCacheFile(pics.getUrl());
 				model.addObject("pics", pics);
 			}
-			model.addObject("cachePath", Global.getFileCacheDirImages()+"/");
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 		}
@@ -101,6 +91,7 @@ public class PicsController {
 				pics_o.setTitle(pics.getTitle());
 				pics_o.setType(pics.getType());
 				pics_o.setUrl(pics.getUrl());
+				pics_o.setRedirectUrl(pics.getRedirectUrl());
 				picsService.update(pics_o);
 			}else{
 				pics.setCreateTime(new Date());
@@ -150,11 +141,10 @@ public class PicsController {
 				// 获取图片的文件名
 				String newFileName = FileUtil.getNewFile(fileName);
 				FileUtil.saveFileFromInputStream(file.getInputStream(), fileDir, newFileName);
-				String cachePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
-				FileUtil.createDir(cachePath);
-				FileUtil.saveFileFromInputStreamToCache(file.getInputStream(), cachePath, newFileName);
 				rd.setStatus(1);
-				rd.setResult(newFileName);
+				String fileUrl = Global.getServiceUrl()+"/file/getLocalFile.do?fileType=cacheImages&fileName="+newFileName;
+				log.info("fileUrl:"+fileUrl);
+				rd.setResult(fileUrl);
 			}else{
 				rd.setMessage("接收的文件为空");
 			}
@@ -172,6 +162,9 @@ public class PicsController {
 		try {
 			if(!StringUtils.isEmpty(fileName)){
 				boolean flag = false;
+				if(fileName.indexOf("fileName=")>0){
+					fileName = fileName.substring(fileName.indexOf("fileName=")+9);
+				}
 				//本地目录
 				String fileDir = Global.getFileSaveDirImages();
 				flag = FileUtil.deleteFile(fileDir+File.separator+fileName);
@@ -179,14 +172,6 @@ public class PicsController {
 					rd.setStatus(1);
 				}else{
 					rd.setMessage("删除本地图片失败");
-				}
-				//tomcat缓存目录
-				String cachePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
-				flag = FileUtil.deleteFile(cachePath+File.separator+fileName);
-				if(flag){
-					rd.setStatus(1);
-				}else{
-					rd.setMessage("删除缓存图片失败");
 				}
 			}
 		} catch (Exception e) {

@@ -45,7 +45,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 		//判断是否session过期
 		if(request.getSession().getAttribute(Global.USERID_SESSION)==null){
 			System.out.println(request.getContextPath());
-			response.sendRedirect("/admin/login.do");
+			if(requestUrl.startsWith("/phone/")){
+				response.sendRedirect("/phone/login.do");
+			}else{
+				response.sendRedirect("/admin/login.do");
+			}
 			return false;
 		}else{
 			return true;

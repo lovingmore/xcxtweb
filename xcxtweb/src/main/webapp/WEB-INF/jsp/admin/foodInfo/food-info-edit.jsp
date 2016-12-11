@@ -163,7 +163,7 @@ table.option select {
 					<div id="pictureDiv">
 						<c:if test="${!empty foodInfo.facePic }">
 							<img width="300px" height="300px"
-								src="${cachePath }${foodInfo.facePic}">
+								src="${foodInfo.facePic}">
 							<a href="javascript:deleteFile('${foodInfo.facePic }')">删除图片</a>
 						</c:if>
 					</div>
@@ -177,7 +177,7 @@ table.option select {
 						style="width: 100%">${foodInfo.content}</script>
 				</div>
 			</div>
-			<input type="file" style="display: none" accept="image/*"
+			<input type="file" style="display: none" 
 				class="input-file" id="picture_file" name="picture_file"
 				onchange="uploadPicture()" />
 			<div class="row cl">
@@ -264,7 +264,7 @@ function uploadPicture(){
 				parent.layer.alert('上传成功');
 				var div = $("#pictureDiv");
 				var fileName = data.result;
-				var html = '<img width="300px" height="300px" src="${cachePath}'+fileName+'">' +
+				var html = '<img width="300px" height="300px" src="'+fileName+'">' +
 						'<a href="javascript:deleteFile(\''+fileName+'\')">删除图片</a>';
 				div.html(html);
 				$("#facePic").val(fileName);

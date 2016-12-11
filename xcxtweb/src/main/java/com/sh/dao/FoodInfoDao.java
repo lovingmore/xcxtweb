@@ -3,6 +3,7 @@ package com.sh.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ public class FoodInfoDao extends BaseDao{
 	public FoodInfo get(Session session, Integer id) {
 		String hql = "from FoodInfo where id=?";
 		List<FoodInfo> list = this.findByHql(session, hql, id);
-		if(list!=null){
+		if(list!=null && list.size()>0){
 			return list.get(0);
 		}
 		return null;
@@ -56,6 +57,22 @@ public class FoodInfoDao extends BaseDao{
 	public void delete(Session session, Integer id) {
 		String hql = "delete FoodInfo where id=?";
 		this.executeHql(session, hql, id);
+	}
+	
+	public List<FoodInfo> listByAllCategory(Session session, Integer categoryId, String foodInfoName) {
+		String nameSql = "";
+		if(!StringUtils.isEmpty(foodInfoName)){
+			nameSql = " and fi.name like '%"+foodInfoName+"%' ";
+		}
+		String categorySql = "";
+		if(categoryId!=null){
+			categorySql = " and (fc.id=? or fc.parentId=?) ";
+		}
+		String hql = "select fi from FoodInfo fi,FoodCategory fc where fi.categoryId=fc.id and fi.status=0 "+categorySql+nameSql;
+		if(!StringUtils.isEmpty(categorySql)){
+			return this.findByHql(session, hql,categoryId,categoryId);
+		}
+		return this.findByHql(session, hql);
 	}
 
 	private String getHql(Map<String, Object> map){

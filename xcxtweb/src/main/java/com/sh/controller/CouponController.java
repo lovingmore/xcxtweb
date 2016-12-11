@@ -87,6 +87,7 @@ public class CouponController {
 				coupon_o.setMoney(coupon.getMoney());
 				coupon_o.setStartDate(startDate);
 				coupon_o.setEndDate(endDate);
+				coupon_o.setConditionMoney(coupon.getConditionMoney());
 				couponService.update(coupon_o);
 			}else{
 				coupon.setStartDate(startDate);

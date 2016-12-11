@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="order",catalog="xcxt")
@@ -26,6 +28,9 @@ public class Order implements java.io.Serializable {
 	private Integer OrderStatus;//订单状态      0 待支付 1 待发货  2 待收货  3 已结束 
 	private Integer PaymentType;// 付款方式    1 微信支付  0 线下支付
 	private Double freight; //运费
+	private Integer userId;//购买人用户id
+	private Integer couponId;//优惠券id
+	private Double couponMoney;//优惠券金额
 	
 	public Order() {
 	}
@@ -71,6 +76,7 @@ public class Order implements java.io.Serializable {
 		OrderNo = orderNo;
 	}
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderdate", length = 19)
 	public Date getOrderDate() {
 		return OrderDate;
@@ -158,6 +164,33 @@ public class Order implements java.io.Serializable {
 
 	public void setPaymentType(Integer paymentType) {
 		PaymentType = paymentType;
+	}
+
+	@Column(name = "user_id", columnDefinition="int default 0")
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	@Column(name = "coupon_id", columnDefinition="int default 0")
+	public Integer getCouponId() {
+		return couponId;
+	}
+
+	public void setCouponId(Integer couponId) {
+		this.couponId = couponId;
+	}
+	
+	@Column(name = "coupon_money", precision = 10, scale = 2, columnDefinition="double default 0")
+	public Double getCouponMoney() {
+		return couponMoney;
+	}
+
+	public void setCouponMoney(Double couponMoney) {
+		this.couponMoney = couponMoney;
 	}
 
 }

@@ -18,6 +18,7 @@ public class OrderDetail implements java.io.Serializable {
 	private Double FoodPrice;//菜品价格
 	private Double FoodNum;//菜品数量
 	private Double DiscountAmount; //优惠金额
+	private String orderNo;//订单编号
 	
 	
 	public OrderDetail() {
@@ -81,6 +82,15 @@ public class OrderDetail implements java.io.Serializable {
 
 	public void setOrderId(Integer orderId) {
 		OrderId = orderId;
+	}
+
+	@Column(name = "orderno", length=40)
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 	
 }

@@ -27,6 +27,7 @@ public class Coupon implements java.io.Serializable {
 	private Integer number;
 	private Integer dr;
 	private Date createTime;
+	private Double conditionMoney;
 
 	public Coupon() {
 	}
@@ -107,6 +108,15 @@ public class Coupon implements java.io.Serializable {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name="condition_money", precision = 10, scale = 2, columnDefinition="double default 0")
+	public Double getConditionMoney() {
+		return conditionMoney;
+	}
+
+	public void setConditionMoney(Double conditionMoney) {
+		this.conditionMoney = conditionMoney;
 	}
 
 }

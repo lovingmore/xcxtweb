@@ -107,7 +107,7 @@ table.option select{
 	<input type="hidden" id="orderAmount" name="orderAmount" value="${customer.orderAmount }" />
 	<input type="hidden" id="status" name="status" value="${customer.status }" />
 		
-	<input type="file" style="display:none" accept="image/*" class="input-file" id="picture_file" name="picture_file" onchange="uploadPicture()" />
+	<input type="file" style="display:none" class="input-file" id="picture_file" name="picture_file" onchange="uploadPicture()" />
 	<div class="row cl">
 		<div class="col-xs-8 col-sm-8  col-xs-offset-2 col-sm-offset-2">
 		<input class="btn btn-primary radius" type="submit" value="提交" />

@@ -34,7 +34,6 @@ import com.sh.util.ResultData;
 public class FoodInfoController {
 	private Logger log = Logger.getLogger(FoodInfoController.class);
 	
-	private String cacheImagePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
 	
 	@Resource
 	private FoodInfoService foodInfoService;
@@ -72,15 +71,8 @@ public class FoodInfoController {
 		try {
 			if(id!=null && id!=0){
 				FoodInfo foodInfo = foodInfoService.get(id);
-				if(!StringUtils.isEmpty(foodInfo.getFacePic())){
-					String sourceFile = Global.getFileSaveDirImages()+File.separator+foodInfo.getFacePic();
-					String targetFile = cacheImagePath+File.separator+foodInfo.getFacePic();
-					FileUtil.createDir(cacheImagePath);
-					FileUtil.resetCacheFile(sourceFile, targetFile);
-				}
 				model.addObject("foodInfo", foodInfo);
 			}
-			model.addObject("cachePath", Global.getFileCacheDirImages()+"/");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("status", 0);
 			List<FoodCategory> list_fc = foodCategoryService.list(map);
@@ -164,11 +156,10 @@ public class FoodInfoController {
 				// 获取图片的文件名
 				String newFileName = FileUtil.getNewFile(fileName);
 				FileUtil.saveFileFromInputStream(file.getInputStream(), fileDir, newFileName);
-				String cachePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
-				FileUtil.createDir(cachePath);
-				FileUtil.saveFileFromInputStreamToCache(file.getInputStream(), cachePath, newFileName);
 				rd.setStatus(1);
-				rd.setResult(newFileName);
+				String fileUrl = Global.getServiceUrl()+"/file/getLocalFile.do?fileType=cacheImages&fileName="+newFileName;
+				log.info("fileUrl:"+fileUrl);
+				rd.setResult(fileUrl);
 			}else{
 				rd.setMessage("接收的文件为空");
 			}
@@ -187,20 +178,15 @@ public class FoodInfoController {
 			if(!StringUtils.isEmpty(fileName)){
 				boolean flag = false;
 				//本地目录
+				if(fileName.indexOf("fileName=")>0){
+					fileName = fileName.substring(fileName.indexOf("fileName=")+9);
+				}
 				String fileDir = Global.getFileSaveDirImages();
 				flag = FileUtil.deleteFile(fileDir+File.separator+fileName);
 				if(flag){
 					rd.setStatus(1);
 				}else{
 					rd.setMessage("删除本地图片失败");
-				}
-				//tomcat缓存目录
-				String cachePath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath(Global.getFileCacheDirImages());
-				flag = FileUtil.deleteFile(cachePath+File.separator+fileName);
-				if(flag){
-					rd.setStatus(1);
-				}else{
-					rd.setMessage("删除缓存图片失败");
 				}
 			}
 		} catch (Exception e) {

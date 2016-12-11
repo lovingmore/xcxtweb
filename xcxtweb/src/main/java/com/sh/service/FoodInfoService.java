@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.sh.dao.FoodInfoDao;
 import com.sh.entity.FoodInfo;
-import com.sh.entity.FoodInfo;
 
 @Service("FoodInfoService")
 public class FoodInfoService{
@@ -54,6 +53,10 @@ public class FoodInfoService{
 
 	public void delete(Integer id) {
 		this.foodInfoDao.delete(getCurrentSession(), id);
+	}
+	
+	public List<FoodInfo> listByAllCategory(Integer categoryId, String foodInfoName) {
+		return this.foodInfoDao.listByAllCategory(getCurrentSession(), categoryId, foodInfoName);
 	}
 
 }
